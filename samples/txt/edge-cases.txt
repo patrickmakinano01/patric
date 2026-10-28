@@ -1,0 +1,16 @@
+Edge cases: words that must NOT be flagged
+
+other, there, the, theme, chairmanship, shelter, history, whisper, mother, together.
+
+
+
+Edge cases: words that MUST be flagged (5 terms)
+
+(He) said "she" would come; ask him. HIS OR HER bag. STEWARDESS and Chairman.
+
+
+
+Whitespace and hyphen variants (2 terms)
+
+his     or
+her notebook, and a man‑made lake.

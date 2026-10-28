@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patch — Gender-Neutral Language Recognizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script>try{var t=localStorage.getItem("patch-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-top">
+      <span class="brand"><i aria-hidden="true">✦</i>Patch</span>
+      <span class="pill">Private &middot; runs in your browser</span>
+      <span class="spacer"></span>
+      <button id="themeBtn" class="icon-btn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+    </div>
+    <h1>Say it for everyone. <span class="by">by Patrick</span></h1>
+    <p>Patch reads your text with a finite state automaton, flags gender-specific terms, and suggests inclusive alternatives in one click.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="banner" class="banner info" role="status" aria-live="polite">
+    Upload a document or paste text to begin.
+  </div>
+
+  <div class="grid">
+    <!-- LEFT: document -->
+    <section class="card">
+      <div class="card-head">
+        <h2>Document</h2>
+        <div class="seg" role="tablist" aria-label="View">
+          <button id="tabEdit" class="seg-btn active" role="tab">Edit</button>
+          <button id="tabView" class="seg-btn" role="tab">Highlighted</button>
+        </div>
+        <div class="spacer"></div>
+        <select id="sampleSel" class="btn small" aria-label="Load a sample"><option value="">Samples…</option><option value="biased">Biased example</option><option value="neutral">Neutral example</option><option value="speech">Speech opener</option></select>
+        <button id="undoBtn" class="btn small" disabled title="Ctrl+Z">Undo</button>
+        <button id="clearBtn" class="btn ghost small">Clear</button>
+      </div>
+
+      <label id="drop" class="drop" tabindex="0">
+        <input id="file" type="file" accept=".txt,.docx,.pdf" hidden>
+        <strong>Drop a file here</strong> or <span class="link">browse</span> <span class="muted">(Ctrl+O)</span>
+        <span class="muted">&nbsp;.txt &middot; .docx &middot; .pdf</span>
+      </label>
+      <div id="fileName" class="muted file-name" hidden></div>
+
+      <textarea id="editor" spellcheck="false"
+        placeholder="…or paste / type text here. Try: The chairman told the stewardess that he would call his wife."></textarea>
+      <div id="viewer" class="viewer" hidden></div>
+      <div class="hint muted" id="viewHint" hidden>Click a highlighted term to replace it with a suggestion.</div>
+      <div class="foot-row">
+        <span class="muted" id="wc">0 words</span>
+        <span class="spacer"></span>
+        <button id="fixAllBtn" class="btn primary small" hidden>Accept all suggestions</button>
+      </div>
+    </section>
+
+    <!-- RIGHT: results -->
+    <section class="card">
+      <div class="card-head"><h2>Results</h2></div>
+
+      <div class="stats">
+        <div class="stat"><b id="statTotal">0</b><span>Occurrences</span></div>
+        <div class="stat"><b id="statDistinct">0</b><span>Distinct terms</span></div>
+        <div class="stat"><b id="statScore">&ndash;</b><span>Neutral score</span></div>
+        <div class="stat"><b id="statStates">0</b><span>FSA states</span></div>
+      </div>
+
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-pane="paneSummary">Summary</button>
+        <button class="tab" data-pane="paneReport">Report</button>
+        <button class="tab" data-pane="paneFsa">FSA inspector</button>
+      </div>
+
+      <div id="paneSummary" class="pane">
+        <table id="summaryTable" class="res-table" hidden><thead><tr><th>Term</th><th>Occurrences</th><th>Suggested alternatives</th></tr></thead><tbody id="summary"></tbody></table>
+        <p id="summaryEmpty" class="muted empty">No results yet.</p>
+      </div>
+
+      <div id="paneReport" class="pane" hidden>
+        <pre id="report" class="report"></pre>
+        <div class="row">
+          <button id="dlBtn" class="btn primary small">Download report</button>
+          <button id="copyBtn" class="btn ghost small">Copy</button>
+        </div>
+      </div>
+
+      <div id="paneFsa" class="pane" hidden>
+        <p class="muted">Type a word or phrase and watch the automaton move through its states.
+          State <code>q0</code> is the start state; a green state is accepting.</p>
+        <input id="fsaInput" class="field" placeholder="e.g. chairman" value="chairman" spellcheck="false">
+        <div id="fsaTrace" class="trace"></div>
+        <p id="fsaVerdict" class="verdict"></p>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div id="pop" class="pop" hidden></div>
+<div id="toast" class="toast" hidden></div>
+<footer class="wrap muted foot">Patch &middot; &copy; Patrick &middot; Runs entirely in your browser &mdash; documents are never uploaded anywhere.</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="lexicon.js"></script>
+<script src="fsa.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
